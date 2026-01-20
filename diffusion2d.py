@@ -38,14 +38,22 @@ class SolveDiffusion2D:
         self.dt = None
 
     def initialize_domain(self, w=10., h=10., dx=0.1, dy=0.1):
+        assert isinstance(w, float)
+        assert isinstance(h, float)
+        assert isinstance(dx, float)
+        assert isinstance(dy, float)
         self.w = w
         self.h = h
         self.dx = dx
         self.dy = dy
-        self.nx = int(w / dx)
-        self.ny = int(h / dy)
 
-    def initialize_physical_parameters(self, d=4., T_cold=300, T_hot=700):
+        self.nx = int(self.w / self.dx)
+        self.ny = int(self.h / self.dy)
+
+    def initialize_physical_parameters(self, d=4., T_cold=300., T_hot=700.):
+        assert isinstance(d, float)
+        assert isinstance(T_cold, (float))
+        assert isinstance(T_hot, (float))
         self.D = d
         self.T_cold = T_cold
         self.T_hot = T_hot
@@ -53,8 +61,6 @@ class SolveDiffusion2D:
         # Computing a stable time step
         dx2, dy2 = self.dx * self.dx, self.dy * self.dy
         self.dt = dx2 * dy2 / (2 * self.D * (dx2 + dy2))
-
-        print("dt = {}".format(self.dt))
 
     def set_initial_condition(self):
         u = self.T_cold * np.ones((self.nx, self.ny))
@@ -67,7 +73,6 @@ class SolveDiffusion2D:
                 p2 = (i * self.dx - cx) ** 2 + (j * self.dy - cy) ** 2
                 if p2 < r2:
                     u[i, j] = self.T_hot
-
         return u.copy()
 
     def do_timestep(self, u_nm1):
@@ -109,7 +114,7 @@ def main():
     DiffusionSolver.initialize_physical_parameters()
 
     u0 = DiffusionSolver.set_initial_condition()
-
+    print(f"Initial condition u0 = {u0}")
     # Number of timesteps
     nsteps = 101
 

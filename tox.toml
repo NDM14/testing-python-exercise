@@ -1,0 +1,15 @@
+[tox]
+env_list = ["pytest", "report"]
+requires = ["tox>=4.0"]
+
+["testenv:pytest"]
+description = "run pytest"
+deps = ["-rrequirements.txt"]
+commands = ["python3", "-m" ,"pytest"]
+
+["testenv:report"]
+deps = ["-rrequirements.txt"]
+commands = [
+    ["coverage", "report"],
+    ["coverage", "json"]
+]
